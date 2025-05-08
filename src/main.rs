@@ -124,6 +124,42 @@ fn test_binary_search_tree(){
         //test removal
         let rootalter = BstNode::tree_delete(&rootlink2.as_ref().unwrap());
         generate_dotfile_bst(&rootalter, "bst_delete_root.dot");
+
+        //test add_node
+        let target_node_key: i32 = 6;
+        let value_to_add: i32 = 5;
+        if let Some(target_node) = rootlink2.as_ref().unwrap().borrow().tree_search(&target_node_key) {
+            let add_result = rootlink2.as_ref().unwrap().borrow().add_node(&target_node, value_to_add);
+            if add_result {
+                println!("Node with value {} added under node with key {}", value_to_add, target_node_key);
+                generate_dotfile_bst(&rootlink2.as_ref().unwrap(), "bst_add_node.dot");
+            } else {
+                println!("Failed to add node.");
+            }
+        } else {
+            println!("Target node with key {} not found.", target_node_key);
+        }
+
+        //test tree_predecessor
+        if let Some(node_to_find_predecessor) = rootlink2.as_ref().unwrap().borrow().tree_search(&7) {
+            if let Some(predecessor) = BstNode::tree_predecessor(&node_to_find_predecessor) {
+                println!("Predecessor of node with key 7 is {:?}", predecessor.borrow().key);
+            } else {
+                println!("No predecessor found for node with key 7.");
+            }
+        }
+
+        //test median
+        if let Some(median_node) = rootlink2.as_ref().unwrap().borrow().median() {
+            println!("Median node key: {:?}", median_node.borrow().key);
+        } else {
+            println!("Tree is empty, cannot find median.");
+        }
+
+        //test tree_rebalance
+        let rebalanced_tree = BstNode::tree_rebalance(rootlink2.as_ref().unwrap());
+        println!("Rebalanced tree, new root: {:?}", rebalanced_tree.borrow().key);
+
     }
 }
 
